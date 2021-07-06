@@ -1,0 +1,35 @@
+* {
+    margin:0px;
+}
+
+.card {
+    width: 250px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+} 
+
+label {
+    max-width: max-content;
+    color: tomato;
+    font-size: 13px;
+    border-bottom: 1px solid tomato;
+}
+
+.desc {
+    font-size: 14px;
+}
+
+.star {
+    color: gold;
+}
+
+.username {
+    font-size: 13px;
+}
+
+.date {
+    font-size: 11px;
+}
