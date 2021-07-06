@@ -15,6 +15,11 @@ function App() {
   const [currentPlaceId,setCurrentPlaceId] = useState(null)
   const [newPlace, setNewPlace] = useState(null)
 
+  const [title, setNewPlace] = useState(null)
+  const [desc, setNewPlace] = useState(null)
+  const [rating, setNewPlace] = useState(0)
+
+
   useEffect(() => {
     const url = "http://localhost:8080/api/allPins"
     const getPins = async () => {
