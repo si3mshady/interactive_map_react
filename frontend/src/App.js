@@ -4,20 +4,25 @@ import ReactMapGL, {Marker, Popup} from 'react-map-gl';
 import RoomIcon from '@material-ui/icons/Room';
 import Star from '@material-ui/icons/Star'
 import axios from 'axios'
+import Register from './components/Register'
+import Login from './components/Login'
+
 import {format} from 'timeago.js'
 import './App.css';
 
 
 
 function App() {
-  const currentUser = 'si3mshady'
+  const myStorage = window.localStorage;
+  const [currentUser, setCurrentUser] = useState(myStorage.getItem("user"))
   const [pins, setPins] = useState([])
   const [currentPlaceId,setCurrentPlaceId] = useState(null)
   const [newPlace, setNewPlace] = useState(null)
-
-  const [title, setNewPlace] = useState(null)
-  const [desc, setNewPlace] = useState(null)
-  const [rating, setNewPlace] = useState(0)
+  const [showRegister, setShowRegister] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
+  const [title, setNewTitle] = useState(null)
+  const [desc, setNewDesc] = useState(null)
+  const [rating, setNewRating] = useState(0)
 
 
   useEffect(() => {
@@ -55,10 +60,46 @@ function App() {
 
   }
 
+  const handleTitle = (value) => {
+    setNewTitle(value)
+  }
+
+  const handleDesc = (value) => {
+    setNewDesc(value)
+  }
+
   const handleAddClick = (e) => {
     const [long, lat] =  e.lngLat
     setNewPlace({lat:lat,long:long})
 
+  }
+
+  const handleLogout = () => {
+    myStorage.removeItem('user')
+    setCurrentUser(null)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const newPin = {
+        username: currentUser,
+        title: title,
+        desc: desc,
+        rating: rating,
+        lat: newPlace.lat,
+        long: newPlace.long
+    }
+
+    try {
+      const url = "http://localhost:8080/api/pins"
+      const res = await axios.post(url, newPin)
+      console.log(res.data)
+      setPins([...pins, res.data])
+      setNewPlace(null)
+    } catch(err) {
+      console.log(err)
+
+    }
   }
 
   return (
@@ -69,13 +110,13 @@ function App() {
     mapStyle="mapbox://styles/si3mshady/ckqr1pgbq3dtl17mo79rzts2p"
     onViewportChange={nextViewport => setViewport(nextViewport)} 
     onDblClick={(e) => handleAddClick(e)}
-    transitionDuration="300"
+    transitionDuration="100"
     >
    
     {pins.map(p => (
 <>
 <Marker latitude={p.lat} longitude={p.long} 
-offsetLeft={-20} offsetTop={-10}  >    
+offsetLeft={-viewport.zoom * 6} offsetTop={-viewport.zoom * 3}  >    
 
 <RoomIcon
 onClick={() => handleMarkerClick(p._id, p.lat, p.long)}
@@ -100,12 +141,11 @@ style={{fontSize:viewport.zoom * 6, color: p.username === currentUser? "red": "b
    <label>Review</label>
    <p className="desc">{p.desc}</p>
    <label>Rating</label>
-   <div className="start">
-   <Star className="star" />
-   <Star className="star" />
-   <Star className="star" />
-   <Star className="star" />
-   <Star className="star" />
+   <div className="star">
+
+     {Array(p.rating).fill( <Star className="star" />)}
+ 
+
    </div>
    <label>Information</label>
    <span className="userName">Created by <b>{p.username}</b></span>
@@ -128,13 +168,17 @@ style={{fontSize:viewport.zoom * 6, color: p.username === currentUser? "red": "b
 
         anchor="left" >     
         <div>
-          <form>
+          <form onSubmit={(e) => handleSubmit(e)}>
             <label>Title</label>
-            <input placeholder="Enter a Title" />
+            <input placeholder="Enter a Title"
+            onChange={(e) => handleTitle(e.target.value) }
+            />
             <label>Review</label>
-            <textarea placeholder="Enter a Review" />
+            <textarea 
+            onChange={(e) => handleDesc(e.target.value)} 
+            placeholder="Enter a Review" />
             <label>Rating</label>
-            <select>
+            <select onChange={(e) => setNewRating(e.target.value)}>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -151,6 +195,20 @@ style={{fontSize:viewport.zoom * 6, color: p.username === currentUser? "red": "b
 
     )}
    
+   
+      {currentUser ? (<button 
+        onClick={() => handleLogout()}
+      className="button logout">Logout</button>) : 
+      (<div className="buttons">
+        <button onClick={() => setShowLogin(true)} className="button login">Login</button>
+        <button onClick={() => setShowRegister(true)}  className="button register">Register</button>
+   </div>)}
+   
+   {showRegister &&  <Register setShowRegister={setShowRegister} />}
+   {showLogin && <Login setCurrentUser={setCurrentUser}
+        myStorage={myStorage}
+       setShowLogin={setShowLogin} />  }
+ 
     
   </ReactMapGL>
  
