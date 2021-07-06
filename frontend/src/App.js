@@ -26,7 +26,10 @@ function App() {
 
 
   useEffect(() => {
+    //REACT_APP_ALLPINS
     const url = "http://localhost:8080/api/allPins"
+    
+    // const url = process.env.REACT_APP_ALLPINS
     const getPins = async () => {
       try {
         const res =  await axios.get(url)
@@ -91,7 +94,9 @@ function App() {
     }
 
     try {
-      const url = "http://localhost:8080/api/pins"
+      // REACT_APP_NEW_PIN
+      // const url = "http://localhost:8080/api/pins"
+      const url = process.env.REACT_APP_NEW_PIN
       const res = await axios.post(url, newPin)
       console.log(res.data)
       setPins([...pins, res.data])
@@ -106,8 +111,8 @@ function App() {
 
     <ReactMapGL 
     {...viewport}
-    const mapboxApiAccessToken = {process.env.REACT_APP_MAPBOX}
-    mapStyle="mapbox://styles/si3mshady/ckqr1pgbq3dtl17mo79rzts2p"
+    const mapboxApiAccessToken = "pk.eyJ1Ijoic2kzbXNoYWR5IiwiYSI6ImNrcXF6d2ljYTJjcDcyeHF0YzR0ZmVibW8ifQ.xNRYf1ybY6LHYXriebMQJg"
+    mapStyle="mapbox://styles/si3mshady/ckqryr9vc320q17jm0783x0as"
     onViewportChange={nextViewport => setViewport(nextViewport)} 
     onDblClick={(e) => handleAddClick(e)}
     transitionDuration="100"

@@ -11,7 +11,9 @@ app.use(cors())
 app.use(express.json())
 
 // mongodb://mongo:27017
-mongoose.connect('mongodb://localhost:27017/map', 
+// ENV MONGO_CONNECT_URL=mongodb://localhost:27017/map
+
+mongoose.connect(process.env.MONGO_CONNECT_URL, 
     {useNewUrlParser:true}, err => {
    if (!err) {
        console.log("Connected to database!")

@@ -1,0 +1,42 @@
+# FROM nginx:latest
+FROM node:alpine 
+
+LABEL developer=ElliottLamarArnold
+
+WORKDIR /app 
+
+RUN mkdir src
+RUN mkdir public 
+
+COPY frontend/package.json .
+COPY frontend/src src
+COPY frontend/public public
+
+RUN npm i package.json
+
+EXPOSE 3000
+CMD ["npm", "start"]
+
+#docker build .  -f Dockerfile.fe -t si3mshady/frontend-map-dev:1
+
+
+
+
+
+
+
+
+#docker build .  -f Dockerfile.fe -t si3mshady/frontend-map-dev:1
+
+# WORKDIR /usr/share/nginx/html
+
+# COPY /frontend/build /usr/share/nginx/html
+
+# ENV REACT_APP_ALLPINS=http://localhost:8080/api/allPins
+# ENV REACT_APP_LOGIN=http://localhost:8080/login
+# ENV REACT_APP_NEW_PIN=http://localhost:8080/api/pins
+# ENV REACT_APP_REGISTER=http://localhost:8080/register
+# ENV REACT_APP_MAPBOX=pk.eyJ1Ijoic2kzbXNoYWR5IiwiYSI6ImNrcXF6d2ljYTJjcDcyeHF0YzR0ZmVibW8ifQ.xNRYf1ybY6LHYXriebMQJg
+
+# EXPOSE 80
+

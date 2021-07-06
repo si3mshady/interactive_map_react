@@ -21,8 +21,9 @@ export default function Login({setShowLogin,myStorage, setCurrentUser}) {
       
 
         try {
-            
             const url = 'http://localhost:8080/login'
+            // REACT_APP_LOGIN
+            // const url = process.env.REACT_APP_LOGIN
             const res = await axios.post(url, user)
             myStorage.setItem('username', res.data.username)
             setCurrentUser(res.data.username)

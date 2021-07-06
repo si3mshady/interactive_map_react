@@ -24,8 +24,9 @@ export default function Register({setShowRegister}) {
       
 
         try {
-            
+            // REACT_APP_REGISTER
             const url = 'http://localhost:8080/register'
+            // const url = process.env.REACT_APP_REGISTER
             await axios.post(url, newUser)
             setSuccess(true)
             setError(false)

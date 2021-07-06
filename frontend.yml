@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reactfrontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:      
+      si3mshady: reactfrontend
+    
+  template:
+    metadata:
+      labels:
+        
+        si3mshady: reactfrontend
+    spec:
+      containers:
+      - name: reactfrontend
+        image: si3mshady/frontend-map-dev:1 
+        ports:
+        - containerPort: 3000
+          hostPort: 3000
+        env:
+        - name: REACT_APP_ALLPINS
+          value: http://localhost:8080/api/allPins
+        - name: REACT_APP_LOGIN
+          value: http://localhost:8080/login
+
+
+
+          - REACT_APP_ALLPINS=http://localhost:8080/api/allPins
+      - REACT_APP_LOGIN=http://localhost:8080/login
+      - REACT_APP_NEW_PIN=http://localhost:8080/api/pins
+      - REACT_APP_REGISTER=http://localhost:8080/register 
+      - REACT_APP_MAPBOX=pk.eyJ1Ijoic2kzbXNoYWR5IiwiYSI6ImNrcXF6d2ljYTJjcDcyeHF0YzR0ZmVibW8ifQ.xNRYf1ybY6LHYXriebMQJg
+      
+
+
+--- 
+apiVersion: v1
+kind: Service
+metadata: 
+  name: reactfrontend
+
+spec: 
+  ports: 
+    - port: 3000
+      targetPort: 3000     
+    
+  selector: 
+    si3mshady: reactfrontend
+  type: LoadBalancer
